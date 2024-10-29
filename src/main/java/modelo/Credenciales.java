@@ -4,9 +4,9 @@ public class Credenciales {
     private Long id;
     private String usuario;
     private String password;
-    private Persona persona;
+    private Long persona;
 
-    public Credenciales(Long id, String usuario, String password, Persona persona) {
+    public Credenciales(Long id, String usuario, String password, Long persona) {
         this.id = id;
         this.usuario = usuario;
         this.password = password;
@@ -37,11 +37,11 @@ public class Credenciales {
         this.password = password;
     }
 
-    public Persona getPersona() {
+    public Long getPersona() {
         return persona;
     }
 
-    public void setPersona(Persona persona) {
+    public void setPersona(Long persona) {
         this.persona = persona;
     }
 }

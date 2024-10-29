@@ -3,12 +3,15 @@ package modelo;
 public class Ejemplar {
     private Long id;
     private String nombre;
-    private Planta planta;
+    private String idplanta;
 
-    public Ejemplar(Long id, String nombre, Planta planta) {
+    public Ejemplar(Long id, String nombre, String idplanta) {
         this.id = id;
         this.nombre = nombre;
-        this.planta = planta;
+        this.idplanta = idplanta;
+    }
+    
+    public Ejemplar() {
     }
 
     public Long getId() {
@@ -27,11 +30,11 @@ public class Ejemplar {
         this.nombre = nombre;
     }
 
-    public Planta getPlanta() {
-        return planta;
+    public String getIdPlanta() {
+        return idplanta;
     }
 
-    public void setPlanta(Planta planta) {
-        this.planta = planta;
+    public void setPlanta(String idplanta) {
+        this.idplanta = idplanta;
     }
 }

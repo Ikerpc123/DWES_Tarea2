@@ -1,15 +1,15 @@
 package modelo;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 public class Mensaje {
     private Long id;
-    private LocalDateTime fechaHora;
+    private Date fechaHora;
     private String mensaje;
-    private Persona persona;
-    private Ejemplar ejemplar;
+    private Long persona;
+    private Long ejemplar;
 
-    public Mensaje(Long id, LocalDateTime fechaHora, String mensaje, Persona persona, Ejemplar ejemplar) {
+    public Mensaje(Long id, Date fechaHora, String mensaje, Long persona, Long ejemplar) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.mensaje = mensaje;
@@ -25,11 +25,11 @@ public class Mensaje {
         this.id = id;
     }
 
-    public LocalDateTime getFechaHora() {
+    public Date getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDateTime fechaHora) {
+    public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -41,19 +41,19 @@ public class Mensaje {
         this.mensaje = mensaje;
     }
 
-    public Persona getPersona() {
+    public Long getPersona() {
         return persona;
     }
 
-    public void setPersona(Persona persona) {
+    public void setPersona(Long persona) {
         this.persona = persona;
     }
 
-    public Ejemplar getEjemplar() {
+    public Long getEjemplar() {
         return ejemplar;
     }
 
-    public void setEjemplar(Ejemplar ejemplar) {
+    public void setEjemplar(Long ejemplar) {
         this.ejemplar = ejemplar;
     }
 }
