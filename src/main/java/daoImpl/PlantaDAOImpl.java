@@ -8,12 +8,12 @@ import java.util.*;
 
 import dao.PlantaDAO;
 
-public class PLantaDAOImpl implements PlantaDAO {
+public class PlantaDAOImpl implements PlantaDAO {
 
     private Connection con;
     PreparedStatement ps;
 
-    public PLantaDAOImpl (Connection con){
+    public PlantaDAOImpl (Connection con){
     	this.con = con;
     }
 
@@ -86,6 +86,7 @@ public class PLantaDAOImpl implements PlantaDAO {
         } catch (SQLException e) {
             System.out.println("Error al buscar la planta: " + e.getMessage());
         }
+        
         return planta;
     }
 
