@@ -24,6 +24,7 @@ public class PlantaDAOImpl implements PlantaDAO {
 			ps.setString(1, planta.getCodigo());
 			ps.setString(2, planta.getNombreComun());
 			ps.setString(3, planta.getNombreCientifico());
+			return ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error al insertar la planta: " + e.getMessage());
 		}

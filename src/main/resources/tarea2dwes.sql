@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-10-2024 a las 14:23:15
+-- Tiempo de generación: 31-10-2024 a las 15:47:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tarea2dwes`
 --
+CREATE DATABASE IF NOT EXISTS `tarea2dwes` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `tarea2dwes`;
 
 -- --------------------------------------------------------
 
@@ -83,7 +85,6 @@ CREATE TABLE `plantas` (
   `nombrecomun` varchar(100) NOT NULL,
   `nombrecientifico` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
 -- Índices para tablas volcadas

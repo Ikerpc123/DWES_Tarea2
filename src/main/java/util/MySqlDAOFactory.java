@@ -5,10 +5,23 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.util.Properties;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 public class MySqlDAOFactory {
+	
+	Connection con;
+	
+	private MySqlDAOFactory() {
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tarea2dwes", "root", "");
+			
+		}
+		catch(SQLException e) {
+			System.out.println("No ha sido posible establecer la conexión: " + e.getMessage());
+		}
+	}
 
     private static MysqlDataSource ds = new MysqlDataSource();
 
