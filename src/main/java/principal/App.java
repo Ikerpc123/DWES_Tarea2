@@ -9,6 +9,7 @@ import daoImpl.PlantaDAOImpl;
 import servicios.PlantaServicio;
 import servicioImpl.PlantaServicioImpl;
 import util.MySqlDAOFactory;
+import vista.MenuInicial;
 import vista.MenuPlanta;
 
 public class App 
@@ -18,11 +19,16 @@ public class App
     	// Intento de conexión a la base de datos
         Connection connection = MySqlDAOFactory.getConnection();
         
-     // Instancia de PlantaDAO y PlantaServicio
+        // Instancia de PlantaDAO y PlantaServicio
         PlantaDAOImpl plantaDAO = new PlantaDAOImpl(connection);
         PlantaServicio plantaServicio = new PlantaServicioImpl(plantaDAO);
         
-        Scanner scanner = new Scanner(System.in);
+        MenuInicial menuInicial = new MenuInicial(connection);
+        menuInicial.mostrarMenuInicial();
+        
+        
+        
+        /*Scanner scanner = new Scanner(System.in);
         int opcion;
 
         do {
@@ -56,6 +62,6 @@ public class App
             }
         } while (opcion != 5);
 
-        scanner.close();
+        scanner.close();*/
     }
 }
