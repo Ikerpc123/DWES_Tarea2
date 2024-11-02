@@ -10,11 +10,10 @@ public class MenuAdmin {
         do {
             System.out.println("\n--- Menú Administrador ---");
             System.out.println("1. Gestionar plantas");
-            System.out.println("2. Gestión ");
-            System.out.println("3. Eliminar un usuario");
-            System.out.println("4. Modificar un usuario");
-            System.out.println("5. Ver estadísticas");
-            System.out.println("6. Salir");
+            System.out.println("2. Gestionar ejemplares");
+            System.out.println("3. Gestionar mensajes");
+            System.out.println("4. Registrar persona");
+            System.out.println("5. Salir");
 
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -34,9 +33,6 @@ public class MenuAdmin {
                     modificarUsuario();
                     break;
                 case 5:
-                    verEstadisticas();
-                    break;
-                case 6:
                     System.out.println("Saliendo del menú administrador...");
                     break;
                 default:
