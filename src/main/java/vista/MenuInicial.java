@@ -1,67 +1,73 @@
 package vista;
 
 import java.sql.Connection;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import dao.CredencialesDAO;
 import daoImpl.CredencialesDAOImpl;
+import daoImpl.PersonaDAOImpl;
 import daoImpl.PlantaDAOImpl;
 import servicioImpl.CredencialServicioImpl;
+import servicioImpl.PersonaServicioImpl;
 import servicioImpl.PlantaServicioImpl;
 import servicios.CredencialServicio;
+import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
 public class MenuInicial {
-	private static final String ADMIN_USUARIO = "admin";
-    private static final String ADMIN_PASSWORD = "admin";
     
     private PlantaServicio plantaServicio;
     private CredencialServicio credencialServicio;
+    private PersonaServicio personaServicio;
     
     public MenuInicial(Connection connection) {
         PlantaDAOImpl plantaDAO = new PlantaDAOImpl(connection);
         CredencialesDAOImpl credenDAO = new CredencialesDAOImpl(connection);
+        PersonaDAOImpl personaDAO = new PersonaDAOImpl(connection);
         
         this.plantaServicio = new PlantaServicioImpl(plantaDAO);
-        this.credencialServicio = new CredencialServicioImpl(credenDAO);
+        this.credencialServicio = new CredencialServicioImpl(credenDAO, personaDAO);
+        this.personaServicio = new PersonaServicioImpl(personaDAO);
     }
 
     public void mostrarMenuInicial() {
     	
         Scanner scanner = new Scanner(System.in);
         int opcion;
-
-        do {
-            System.out.println("\n--- Menú Principal ---");
-            System.out.println("1. Registrarse");
-            System.out.println("2. Iniciar Sesión");
-            System.out.println("3. Entrar como Invitado");
-            System.out.println("4. Salir");
-
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // Consumir la nueva línea
-
-            switch (opcion) {
-                case 1:
-                    registrarse(scanner);
-                    break;
-                case 2:
-                    iniciarSesion(scanner);
-                    break;
-                case 3:
-                	MenuPlanta menuPlanta = new MenuPlanta();
-                	menuPlanta.verPlantas(plantaServicio);
-                    break;
-                case 4:
-                    System.out.println("Saliendo del programa...");
-                    break;
-                default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
-            }
-        } while (opcion != 4);
-
-        scanner.close();
+        try {
+        	do {
+	            System.out.println("\n--- Menú Principal ---");
+	            System.out.println("1. Iniciar Sesión");
+	            System.out.println("2. Entrar como Invitado");
+	            System.out.println("3. Salir");
+	
+	            System.out.print("Seleccione una opción: ");
+	            opcion = scanner.nextInt();
+	            scanner.nextLine(); // Consumir la nueva línea
+	        	switch (opcion) {
+	            case 1:
+	                iniciarSesion(scanner);
+	                break;
+	            case 2:
+	            	MenuPlanta menuPlanta = new MenuPlanta();
+	            	menuPlanta.verPlantas(plantaServicio);
+	                break;
+	            case 3:
+	                System.out.println("\nSaliendo del programa...");
+	                break;
+	            default:
+	                System.out.println("Opción no válida. Intente nuevamente.");
+	        	}	
+        	} while (opcion != 3);
+        	
+        	scanner.close();
+        }
+		catch (InputMismatchException e) {
+			System.out.print("\nInserte valores numéricos \n");
+			mostrarMenuInicial();
+		}
+        
     }
 
     private void registrarse(Scanner scanner) {
@@ -90,7 +96,7 @@ public class MenuInicial {
     }
 
     private void accederComoAdministrador() {
-    	MenuAdmin menuAdmin = new MenuAdmin();
+    	MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio);
     	menuAdmin.mostrarMenu();
     }
 }

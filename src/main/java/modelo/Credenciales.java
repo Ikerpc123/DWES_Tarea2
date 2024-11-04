@@ -13,7 +13,12 @@ public class Credenciales {
         this.persona = persona;
     }
 
-    public Long getId() {
+    public Credenciales(String usuario, String password) {
+    	this.usuario = usuario;
+        this.password = password;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -2,35 +2,57 @@ package vista;
 
 import java.util.Scanner;
 
+import servicios.CredencialServicio;
+import servicios.PersonaServicio;
+import servicios.PlantaServicio;
+
 public class MenuAdmin {
+	
+	private PlantaServicio plantaServicio;
+	private PersonaServicio personaServicio;
+	private CredencialServicio credencialServicio;
+	
+	public MenuAdmin() {
+		
+	}
+
+    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio) {
+        this.plantaServicio = plantaServicio;
+        this.personaServicio = personaServicio;
+        this.credencialServicio = credencialServicio;
+    }
+    
 	public void mostrarMenu() {
+		
         Scanner scanner = new Scanner(System.in);
         int opcion;
-
+        
         do {
             System.out.println("\n--- Menú Administrador ---");
             System.out.println("1. Gestionar plantas");
             System.out.println("2. Gestionar ejemplares");
             System.out.println("3. Gestionar mensajes");
             System.out.println("4. Registrar persona");
-            System.out.println("5. Salir");
+            System.out.println("5. Cerrar Sesión");
 
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
-            scanner.nextLine(); // Consumir la nueva línea
+            scanner.nextLine();
 
+            MenuPlanta menuPlanta = new MenuPlanta();
+            MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
+            
             switch (opcion) {
                 case 1:
-                    verUsuarios();
+                	menuPlanta.gestionarPlanta(plantaServicio);
                     break;
                 case 2:
-                    agregarUsuario();
                     break;
                 case 3:
-                    eliminarUsuario();
+                	
                     break;
                 case 4:
-                    modificarUsuario();
+                	menuRegistro.mostrarMenuRegistro();
                     break;
                 case 5:
                     System.out.println("Saliendo del menú administrador...");
@@ -38,33 +60,29 @@ public class MenuAdmin {
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-        } while (opcion != 6);
+        } while (opcion != 5);
 
-        scanner.close();
     }
+	
+	
 
-    private void verUsuarios() {
-        System.out.println("Opción para ver usuarios seleccionada.");
+    /*private void gestionPlantas() {
+        System.out.println("Opción para gestionar plantas seleccionada.");
         // Implementar la lógica para ver los usuarios
     }
 
-    private void agregarUsuario() {
-        System.out.println("Opción para agregar un nuevo usuario seleccionada.");
+    private void gestionEjemplares() {
+        System.out.println("Opción para gestionar ejemplares seleccionada.");
         // Implementar la lógica para agregar un usuario
     }
 
-    private void eliminarUsuario() {
-        System.out.println("Opción para eliminar un usuario seleccionada.");
+    private void gestionMensajes() {
+        System.out.println("Opción para gestionar mensajes seleccionada.");
         // Implementar la lógica para eliminar un usuario
     }
 
-    private void modificarUsuario() {
-        System.out.println("Opción para modificar un usuario seleccionada.");
-        // Implementar la lógica para modificar un usuario
-    }
-
-    private void verEstadisticas() {
-        System.out.println("Opción para ver estadísticas seleccionada.");
+    private void registroPersona() {
+        System.out.println("Opción para registrar persona seleccionada.");
         // Implementar la lógica para ver estadísticas
-    }
+    }*/
 }

@@ -22,10 +22,10 @@ public class PersonaDAOImpl implements PersonaDAO{
     @Override
     public int insertar(Persona persona) {
     	try {
-			ps = con.prepareStatement("INSERT INTO personas (id, nombre, email) VALUES (?, ?, ?)");
-			ps.setLong(1, persona.getId());
-			ps.setString(2, persona.getNombre());
-			ps.setString(3, persona.getEmail());
+			ps = con.prepareStatement("INSERT INTO personas (nombre, email) VALUES (?, ?)");
+			ps.setString(1, persona.getNombre());
+			ps.setString(2, persona.getEmail());
+			return ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error al insertar persona: " + e.getMessage());
 		}
@@ -91,6 +91,22 @@ public class PersonaDAOImpl implements PersonaDAO{
         return persona;
     }
 
+    @Override
+    public Persona findByEmail(String email) {
+    	Persona persona = null;
+        try {
+            ps = con.prepareStatement("SELECT * FROM personas WHERE email = ?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                persona = new Persona(rs.getLong("id"), rs.getString("nombre"), rs.getString("email"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error al buscar persona: " + e.getMessage());
+        }
+        return persona;
+    }
     @Override
     public Set<Persona> findAll() {
     	Set<Persona> personas = new HashSet<>();

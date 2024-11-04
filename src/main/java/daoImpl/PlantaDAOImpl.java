@@ -20,7 +20,7 @@ public class PlantaDAOImpl implements PlantaDAO {
     @Override
     public int insertar(Planta planta) {
     	try {
-			ps = con.prepareStatement("INSERT INTO plantas (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)");
+			ps = con.prepareStatement("INSERT INTO plantas (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, planta.getCodigo());
 			ps.setString(2, planta.getNombreComun());
 			ps.setString(3, planta.getNombreCientifico());
@@ -50,6 +50,7 @@ public class PlantaDAOImpl implements PlantaDAO {
             ps.setString(1, planta.getNombreComun());
             ps.setString(2, planta.getNombreCientifico());
             ps.setString(3, planta.getCodigo());
+            return ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al modificar la planta: " + e.getMessage());
         }

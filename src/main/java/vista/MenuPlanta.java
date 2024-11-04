@@ -37,10 +37,8 @@ public class MenuPlanta {
 	    System.out.print("Ingrese el nombre científico de la planta: ");
 	    String nombreCientifico = scanner.nextLine().trim();
 
-	    // Crear instancia de Planta
 	    Planta nuevaPlanta = new Planta(codigo, nombreComun, nombreCientifico);
 
-	    // Llamar al servicio para insertar la planta
 	    boolean exito = plantaServicio.agregar(nuevaPlanta);
 	    
 	    if (exito) {
@@ -49,4 +47,60 @@ public class MenuPlanta {
 	        System.out.println("No se pudo insertar la planta. Verifique los datos e intente nuevamente.");
 	    }
     }
+	
+
+	public void gestionarPlanta(PlantaServicio plantaServicio)
+	{
+		Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\n--- Gestión de Plantas ---");
+            System.out.println("1. Insertar una nueva planta");
+            System.out.println("2. Modificar una planta");
+            System.out.println("3. Salir");
+
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (opcion) {
+                case 1:
+                	insertarPlanta(plantaServicio);
+                    break;
+                case 2:
+                	modificarPlanta(plantaServicio);
+                    break;
+                case 3:
+                    System.out.println("Saliendo del programa...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente nuevamente.");
+            }
+        } while (opcion != 3);
+
+	}
+	
+	public void modificarPlanta(PlantaServicio plantaServicio)
+	{
+		Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Ingrese el código de la planta a modificar: ");
+        String codigo = scanner.nextLine();
+
+        System.out.print("Ingrese el nuevo nombre común de la planta: ");
+        String nuevoNombreComun = scanner.nextLine();
+
+        System.out.print("Ingrese el nuevo nombre científico de la planta: ");
+        String nuevoNombreCientifico = scanner.nextLine();
+
+        Planta planta = new Planta(codigo, nuevoNombreComun, nuevoNombreCientifico);
+
+        boolean exito = plantaServicio.actualizar(planta);
+        if (exito) {
+            System.out.println("Planta actualizada exitosamente.");
+        } else {
+            System.out.println("No se pudo actualizar la planta. Verifique los datos ingresados.");
+        }
+	}
 }

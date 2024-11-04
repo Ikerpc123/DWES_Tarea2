@@ -15,4 +15,5 @@ public interface PersonaDAO {
     Persona findByNombre(String nombre);
 
     Set<Persona> findAll();
+	Persona findByEmail(String email);
 }

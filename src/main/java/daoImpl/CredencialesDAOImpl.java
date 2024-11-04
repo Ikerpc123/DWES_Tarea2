@@ -22,11 +22,11 @@ public class CredencialesDAOImpl implements CredencialesDAO{
     @Override
     public int insertar(Credenciales credencial) {
     	try {
-			ps = con.prepareStatement("INSERT INTO credenciales (id, usuario, password, persona_id) VALUES (?, ?, ?, ?)");
-			ps.setLong(1, credencial.getId());
-			ps.setString(2, credencial.getUsuario());
-			ps.setString(3, credencial.getPassword());
-			ps.setLong(4, credencial.getPersona());
+			ps = con.prepareStatement("INSERT INTO credenciales (usuario, password, persona_id) VALUES (?, ?, ?)");
+			ps.setString(1, credencial.getUsuario());
+			ps.setString(2, credencial.getPassword());
+			ps.setLong(3, credencial.getPersona());
+			return ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error al insertar las credenciales: " + e.getMessage());
 		}
