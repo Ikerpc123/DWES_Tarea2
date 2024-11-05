@@ -3,6 +3,7 @@ package vista;
 import java.util.Scanner;
 
 import servicios.CredencialServicio;
+import servicios.EjemplarServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -11,15 +12,17 @@ public class MenuAdmin {
 	private PlantaServicio plantaServicio;
 	private PersonaServicio personaServicio;
 	private CredencialServicio credencialServicio;
+	private EjemplarServicio ejemplarServicio;
 	
 	public MenuAdmin() {
 		
 	}
 
-    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio) {
+    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, EjemplarServicio ejemplarServicio) {
         this.plantaServicio = plantaServicio;
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
+        this.ejemplarServicio = ejemplarServicio;
     }
     
 	public void mostrarMenu() {
@@ -41,12 +44,14 @@ public class MenuAdmin {
 
             MenuPlanta menuPlanta = new MenuPlanta();
             MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
+            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio);
             
             switch (opcion) {
                 case 1:
                 	menuPlanta.gestionarPlanta(plantaServicio);
                     break;
                 case 2:
+                	menuEjemplar.mostrarMenu();
                     break;
                 case 3:
                 	

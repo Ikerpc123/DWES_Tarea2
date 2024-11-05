@@ -19,10 +19,9 @@ public class EjemplarDAOImpl implements EjemplarDAO {
     @Override
     public int insertar(Ejemplar ejemplar) {
     	try {
-			ps = con.prepareStatement("INSERT INTO ejemplares (id, nombre, idplanta) VALUES (?, ?, ?)");
-			ps.setLong(1, ejemplar.getId());
-			ps.setString(2, ejemplar.getNombre());
-			ps.setString(3, ejemplar.getIdPlanta());
+			ps = con.prepareStatement("INSERT INTO ejemplares (idplanta) VALUES (?)");
+			ps.setString(1, ejemplar.getIdPlanta());
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error al insertar ejemplares: " + e.getMessage());
 		}
@@ -44,10 +43,10 @@ public class EjemplarDAOImpl implements EjemplarDAO {
     @Override
     public int modificar(Ejemplar ejemplar) {
     	try {
-            ps = con.prepareStatement("UPDATE ejemplares SET nombre = ?, idPlanta = ? WHERE id = ?");
-            ps.setString(1, ejemplar.getNombre());
-            ps.setString(2, ejemplar.getIdPlanta());
-            ps.setLong(3, ejemplar.getId());
+            ps = con.prepareStatement("UPDATE ejemplares SET nombre = ? WHERE id = ?");
+            ps.setString(1, ejemplar.getIdPlanta() + "_" + ejemplar.getId());
+            ps.setLong(2, ejemplar.getId());
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al modificar ejemplares: " + e.getMessage());
         }

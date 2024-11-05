@@ -6,12 +6,15 @@ import java.util.Scanner;
 
 import dao.CredencialesDAO;
 import daoImpl.CredencialesDAOImpl;
+import daoImpl.EjemplarDAOImpl;
 import daoImpl.PersonaDAOImpl;
 import daoImpl.PlantaDAOImpl;
 import servicioImpl.CredencialServicioImpl;
+import servicioImpl.EjemplarServicioImpl;
 import servicioImpl.PersonaServicioImpl;
 import servicioImpl.PlantaServicioImpl;
 import servicios.CredencialServicio;
+import servicios.EjemplarServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -20,18 +23,25 @@ public class MenuInicial {
     private PlantaServicio plantaServicio;
     private CredencialServicio credencialServicio;
     private PersonaServicio personaServicio;
+    private EjemplarServicio ejemplarServicio;
     
     public MenuInicial(Connection connection) {
         PlantaDAOImpl plantaDAO = new PlantaDAOImpl(connection);
         CredencialesDAOImpl credenDAO = new CredencialesDAOImpl(connection);
         PersonaDAOImpl personaDAO = new PersonaDAOImpl(connection);
+        EjemplarDAOImpl ejemplarDAO = new EjemplarDAOImpl(connection);
         
         this.plantaServicio = new PlantaServicioImpl(plantaDAO);
         this.credencialServicio = new CredencialServicioImpl(credenDAO, personaDAO);
         this.personaServicio = new PersonaServicioImpl(personaDAO);
+        this.ejemplarServicio = new EjemplarServicioImpl(ejemplarDAO);
     }
 
-    public void mostrarMenuInicial() {
+    public MenuInicial() {
+		
+	}
+
+	public void mostrarMenuInicial() {
     	
         Scanner scanner = new Scanner(System.in);
         int opcion;
@@ -44,7 +54,7 @@ public class MenuInicial {
 	
 	            System.out.print("Seleccione una opción: ");
 	            opcion = scanner.nextInt();
-	            scanner.nextLine(); // Consumir la nueva línea
+	            scanner.nextLine();
 	        	switch (opcion) {
 	            case 1:
 	                iniciarSesion(scanner);
@@ -70,9 +80,6 @@ public class MenuInicial {
         
     }
 
-    private void registrarse(Scanner scanner) {
-    }
-
     private void iniciarSesion(Scanner scanner) {
     	System.out.print("\nIngrese el nombre de usuario: ");
         String username = scanner.nextLine();
@@ -87,8 +94,6 @@ public class MenuInicial {
             if (credencialServicio.validar(username, password)) {
                 System.out.println("Inicio de sesión exitoso.");
                 
-                // Aquí podrías redirigir al menú o funcionalidades de usuario común
-                
             } else {
                 System.out.println("Credenciales incorrectas. Intente nuevamente.");
             }
@@ -96,7 +101,7 @@ public class MenuInicial {
     }
 
     private void accederComoAdministrador() {
-    	MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio);
+    	MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio, ejemplarServicio);
     	menuAdmin.mostrarMenu();
     }
 }
