@@ -1,6 +1,6 @@
 package modelo;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Mensaje {
     private Long id;
@@ -8,10 +8,14 @@ public class Mensaje {
     private String mensaje;
     private Long persona;
     private Long ejemplar;
+    
+    public Mensaje() {
+        super();
+    }
 
-    public Mensaje(Long id, Date fechaHora, String mensaje, Long persona, Long ejemplar) {
+    public Mensaje(Long id, Date fechaActual, String mensaje, Long persona, Long ejemplar) {
         this.id = id;
-        this.fechaHora = fechaHora;
+        this.fechaHora = fechaActual;
         this.mensaje = mensaje;
         this.persona = persona;
         this.ejemplar = ejemplar;

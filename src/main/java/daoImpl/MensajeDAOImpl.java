@@ -1,10 +1,11 @@
 package daoImpl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class MensajeDAOImpl implements MensajeDAO{
     public int insertar(Mensaje mensaje) {
     	try {
 			ps = con.prepareStatement("INSERT INTO mensajes (fechahora, mensaje, persona_id, ejemplar_id) VALUES (?, ?, ?, ?)");
-			ps.setDate(1, mensaje.getFechaHora());
+			ps.setTimestamp(1, new Timestamp(mensaje.getFechaHora().getTime()));
 			ps.setString(2, mensaje.getMensaje());
 			ps.setLong(3, mensaje.getPersona());
 			ps.setLong(4, mensaje.getEjemplar());
@@ -50,7 +51,7 @@ public class MensajeDAOImpl implements MensajeDAO{
     public int modificar(Mensaje mensaje) {
     	try {
             ps = con.prepareStatement("UPDATE mensajes SET fechahora = ?, mensaje = ?, persona_id = ?, ejemplar_id = ?  WHERE id = ?");
-            ps.setDate(1, mensaje.getFechaHora());
+            ps.setTimestamp(1, new Timestamp(mensaje.getFechaHora().getTime()));
             ps.setString(2, mensaje.getMensaje());
             ps.setLong(3, mensaje.getPersona());
             ps.setLong(3, mensaje.getEjemplar());
@@ -86,7 +87,8 @@ public class MensajeDAOImpl implements MensajeDAO{
     	Mensaje mensaje = null;
         try {
             ps = con.prepareStatement("SELECT * FROM mensajes WHERE fechahora = ?");
-            ps.setDate(1, fecha);;
+            ps.setTimestamp(1, new Timestamp(fecha.getTime()));
+            //ps.setDate(1, fecha);;
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 mensaje = new Mensaje(rs.getLong("id"), 

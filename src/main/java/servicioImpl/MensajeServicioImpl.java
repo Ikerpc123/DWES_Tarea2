@@ -1,5 +1,7 @@
 package servicioImpl;
 
+import java.util.Set;
+
 import dao.MensajeDAO;
 import modelo.Mensaje;
 import servicios.MensajeServicio;
@@ -34,5 +36,10 @@ public class MensajeServicioImpl implements MensajeServicio {
             return resultado > 0;
         }
         return false;
+    }
+    
+    @Override
+    public Set<Mensaje> obtenerTodosMensajes(){
+    	return mensajeDAO.findAll();
     }
 }
