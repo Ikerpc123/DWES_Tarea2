@@ -42,6 +42,12 @@ public class PersonaServicioImpl implements PersonaServicio {
         }
         return false;
     }
+    
+ // Método que verifica si ya existe una persona con el mismo nombre
+    public Persona buscarPorNombre(String nombre) {
+        Persona personaExistente = personaDAO.findByNombre(nombre);
+        return personaExistente;
+    }
 
 	@Override
 	public boolean validar(String usuario, String password) {

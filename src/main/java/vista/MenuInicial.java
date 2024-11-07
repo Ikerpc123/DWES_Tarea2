@@ -7,14 +7,17 @@ import java.util.Scanner;
 import dao.CredencialesDAO;
 import daoImpl.CredencialesDAOImpl;
 import daoImpl.EjemplarDAOImpl;
+import daoImpl.MensajeDAOImpl;
 import daoImpl.PersonaDAOImpl;
 import daoImpl.PlantaDAOImpl;
 import servicioImpl.CredencialServicioImpl;
 import servicioImpl.EjemplarServicioImpl;
+import servicioImpl.MensajeServicioImpl;
 import servicioImpl.PersonaServicioImpl;
 import servicioImpl.PlantaServicioImpl;
 import servicios.CredencialServicio;
 import servicios.EjemplarServicio;
+import servicios.MensajeServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -24,17 +27,20 @@ public class MenuInicial {
     private CredencialServicio credencialServicio;
     private PersonaServicio personaServicio;
     private EjemplarServicio ejemplarServicio;
+    private MensajeServicio mensajeServicio;
     
     public MenuInicial(Connection connection) {
         PlantaDAOImpl plantaDAO = new PlantaDAOImpl(connection);
         CredencialesDAOImpl credenDAO = new CredencialesDAOImpl(connection);
         PersonaDAOImpl personaDAO = new PersonaDAOImpl(connection);
         EjemplarDAOImpl ejemplarDAO = new EjemplarDAOImpl(connection);
+        MensajeDAOImpl mensajeDAO = new MensajeDAOImpl(connection);
         
         this.plantaServicio = new PlantaServicioImpl(plantaDAO);
         this.credencialServicio = new CredencialServicioImpl(credenDAO, personaDAO);
         this.personaServicio = new PersonaServicioImpl(personaDAO);
         this.ejemplarServicio = new EjemplarServicioImpl(ejemplarDAO);
+        this.mensajeServicio = new MensajeServicioImpl(mensajeDAO);
     }
 
     public MenuInicial() {
@@ -82,26 +88,34 @@ public class MenuInicial {
 
     private void iniciarSesion(Scanner scanner) {
     	System.out.print("\nIngrese el nombre de usuario: ");
-        String username = scanner.nextLine();
+        String usuario = scanner.nextLine();
 
         System.out.print("Ingrese la contraseña: ");
-        String password = scanner.nextLine();
+        String contra = scanner.nextLine();
 
-        if ("admin".equals(username) && "admin".equals(password)) {
-            System.out.println("Inicio de sesión exitoso como administrador.");
-            accederComoAdministrador();
-        } else {
-            if (credencialServicio.validar(username, password)) {
-                System.out.println("Inicio de sesión exitoso.");
-                
+        if (credencialServicio.validar(usuario, contra)) {
+            System.out.println("Inicio de sesión exitoso.");
+            
+            // Verificar si el usuario es administrador
+            if (credencialServicio.esAdministrador(usuario, contra)) {
+                accederComoAdministrador(usuario);  // Iniciar el menú de administrador
             } else {
-                System.out.println("Credenciales incorrectas. Intente nuevamente.");
+            	accederComoPersonal(usuario);  // Iniciar el menú regular de usuario
             }
+            
+        } else {
+            System.out.println("Credenciales incorrectas. Intente nuevamente.");
         }
     }
 
-    private void accederComoAdministrador() {
-    	MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio, ejemplarServicio);
+    private void accederComoAdministrador(String usuario) {
+    	MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio, ejemplarServicio, mensajeServicio, usuario);
     	menuAdmin.mostrarMenu();
+    }
+    
+    private void accederComoPersonal(String usuario)
+    { 
+    	MenuPersonal menuPersonal = new MenuPersonal(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, usuario);
+    	menuPersonal.mostrarMenu();
     }
 }

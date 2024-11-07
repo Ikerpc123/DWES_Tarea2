@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import servicios.CredencialServicio;
 import servicios.EjemplarServicio;
+import servicios.MensajeServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -13,16 +14,20 @@ public class MenuAdmin {
 	private PersonaServicio personaServicio;
 	private CredencialServicio credencialServicio;
 	private EjemplarServicio ejemplarServicio;
+	private MensajeServicio mensajeServicio;
+	private String usuario;
 	
 	public MenuAdmin() {
 		
 	}
 
-    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, EjemplarServicio ejemplarServicio) {
+    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
         this.plantaServicio = plantaServicio;
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
         this.ejemplarServicio = ejemplarServicio;
+        this.mensajeServicio = mensajeServicio;
+        this.usuario = usuario;
     }
     
 	public void mostrarMenu() {
@@ -44,7 +49,7 @@ public class MenuAdmin {
 
             MenuPlanta menuPlanta = new MenuPlanta();
             MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
-            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio);
+            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, usuario);
             
             switch (opcion) {
                 case 1:
@@ -68,26 +73,4 @@ public class MenuAdmin {
         } while (opcion != 5);
 
     }
-	
-	
-
-    /*private void gestionPlantas() {
-        System.out.println("Opción para gestionar plantas seleccionada.");
-        // Implementar la lógica para ver los usuarios
-    }
-
-    private void gestionEjemplares() {
-        System.out.println("Opción para gestionar ejemplares seleccionada.");
-        // Implementar la lógica para agregar un usuario
-    }
-
-    private void gestionMensajes() {
-        System.out.println("Opción para gestionar mensajes seleccionada.");
-        // Implementar la lógica para eliminar un usuario
-    }
-
-    private void registroPersona() {
-        System.out.println("Opción para registrar persona seleccionada.");
-        // Implementar la lógica para ver estadísticas
-    }*/
 }

@@ -22,12 +22,12 @@ public class MensajeDAOImpl implements MensajeDAO{
     @Override
     public int insertar(Mensaje mensaje) {
     	try {
-			ps = con.prepareStatement("INSERT INTO mensajes (id, fechahora, mensaje, persona_id, ejemplar_id) VALUES (?, ?, ?, ?, ?)");
-			ps.setLong(1, mensaje.getId());
-			ps.setDate(2, mensaje.getFechaHora());
-			ps.setString(3, mensaje.getMensaje());
-			ps.setLong(4, mensaje.getPersona());
+			ps = con.prepareStatement("INSERT INTO mensajes (fechahora, mensaje, persona_id, ejemplar_id) VALUES (?, ?, ?, ?)");
+			ps.setDate(1, mensaje.getFechaHora());
+			ps.setString(2, mensaje.getMensaje());
+			ps.setLong(3, mensaje.getPersona());
 			ps.setLong(4, mensaje.getEjemplar());
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error al insertar el mensaje: " + e.getMessage());
 		}

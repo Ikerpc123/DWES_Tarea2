@@ -94,7 +94,7 @@ public class CredencialesDAOImpl implements CredencialesDAO{
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println("Error al buscar la planta: " + e.getMessage());
+            System.out.println("Error al buscar las credenciales: " + e.getMessage());
         }
         return credencial;
     }

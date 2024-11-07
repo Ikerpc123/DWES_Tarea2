@@ -30,4 +30,19 @@ public class CredencialServicioImpl implements CredencialServicio {
         int resultado = credencialesDAO.insertar(credenciales);
         return resultado > 0;
     }
+    
+ // Nuevo método para verificar si el usuario es administrador
+    public boolean esAdministrador(String usuario, String password) {
+        Credenciales credencial = credencialesDAO.findByUsuario(usuario);
+        return credencial != null 
+                && "admin".equals(credencial.getUsuario()) 
+                && "admin".equals(credencial.getPassword());
+    }
+    
+    @Override
+    public Credenciales buscarPorUsuario(String nombre) {
+    	Credenciales usuario = credencialesDAO.findByUsuario(nombre);
+        return usuario;
+    }
+    
 }
