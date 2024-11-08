@@ -13,17 +13,19 @@ public class MenuPersonal {
 	EjemplarServicio ejemplarServicio;
 	MensajeServicio mensajeServicio;
 	CredencialServicio credencialServicio;
+	PersonaServicio personaServicio;
 	String usuario;
 	
 	public MenuPersonal() {
 		
 	}
 
-    public MenuPersonal(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, CredencialServicio credencialServicio, String usuario) {
+    public MenuPersonal(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, CredencialServicio credencialServicio, PersonaServicio personaServicio, String usuario) {
     	this.plantaServicio = plantaServicio;
 		this.ejemplarServicio = ejemplarServicio;
 		this.mensajeServicio = mensajeServicio;
 		this.credencialServicio = credencialServicio;
+		this.personaServicio = personaServicio;
 		this.usuario = usuario;
     }
     
@@ -42,7 +44,7 @@ public class MenuPersonal {
             opcion = scanner.nextInt();
             scanner.nextLine();
 
-            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, usuario);
+            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, personaServicio, usuario);
             
             switch (opcion) {
                 case 1:

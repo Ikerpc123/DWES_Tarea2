@@ -115,7 +115,7 @@ public class MenuInicial {
     
     private void accederComoPersonal(String usuario)
     { 
-    	MenuPersonal menuPersonal = new MenuPersonal(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, usuario);
+    	MenuPersonal menuPersonal = new MenuPersonal(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, personaServicio, usuario);
     	menuPersonal.mostrarMenu();
     }
 }

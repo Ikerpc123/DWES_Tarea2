@@ -3,7 +3,6 @@ package dao;
 import java.util.Set;
 
 import modelo.Credenciales;
-import modelo.Persona;
 
 public interface CredencialesDAO {
 	int insertar(Credenciales credencial);

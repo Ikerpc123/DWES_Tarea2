@@ -39,11 +39,12 @@ public class MenuEjemplar {
 	CredencialServicio credencialServicio;
 	String usuario;
 	
-	public MenuEjemplar(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, CredencialServicio credencialServicio, String usuario) {
+	public MenuEjemplar(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, CredencialServicio credencialServicio, PersonaServicio personaServicio, String usuario) {
 		this.plantaServicio = plantaServicio;
 		this.ejemplarServicio = ejemplarServicio;
 		this.mensajeServicio = mensajeServicio;
 		this.credencialServicio = credencialServicio;
+		this.personaServicio = personaServicio;
 		this.usuario = usuario;
     }
 	
@@ -56,9 +57,8 @@ public class MenuEjemplar {
 	            System.out.println("\n--- Gestión Ejemplares ---");
 	            System.out.println("1. Registrar nuevo ejemplar");
 	            System.out.println("2. Filtrar por tipo de planta");
-	            System.out.println("3. ");
+	            System.out.println("3. Ver mensajes de un ejemplar");
 	            System.out.println("4. Volver");
-	            System.out.println("5. Cerrar Sesión");
 	
 	            System.out.print("Seleccione una opción: ");
 	            opcion = scanner.nextInt();
@@ -71,20 +71,15 @@ public class MenuEjemplar {
 	            	filtrarPlanta(scanner);
 	                break;
 	            case 3:
-	            	
+	            	verMensajesDeSeguimiento(scanner);
 	                break;
 	            case 4:
 	            	System.out.println("\nVolviendo...");
 	                break;
-	            case 5:
-	                System.out.println("\nSe ha cerrado sesión...");
-	                MenuInicial menuInicial = new MenuInicial();
-	                menuInicial.mostrarMenuInicial();
-	                break;
 	            default:
 	                System.out.println("Opción no válida. Intente nuevamente.");
 	        	}	
-        	} while (opcion != 2);
+        	} while (opcion != 4);
         	
         }
 		catch (InputMismatchException e) {
@@ -143,7 +138,7 @@ public class MenuEjemplar {
             Set<String> plantas = new HashSet<>();
             
             while (true) {
-                System.out.print("Ingrese un código de planta (escriba `fin` para terminar): ");
+                System.out.print("Ingrese un código de planta (escriba 'fin' para terminar): ");
                 input = scanner.nextLine().trim();
                 
                 if (input.equalsIgnoreCase("fin")) {
@@ -177,7 +172,7 @@ public class MenuEjemplar {
 
     
     private  void mostrarTablaEjemplares(List<Planta> plantas) {
-        System.out.printf("\nNombre Ejemplar      Planta          Nº de Mensajes            Fecha/Hora Último Mensaje");
+        System.out.printf("\nNombre Ejemplar      Planta          Nº de Mensajes            Fecha Último Mensaje");
         System.out.println("\n-------------------------------------------------------------------------------------------");
 
         for (Planta planta : plantas) {
@@ -218,5 +213,45 @@ public class MenuEjemplar {
                 .map(Mensaje::getFechaHora)
                 .max(Date::compareTo)
                 .orElse(null);
+    }
+    
+    private void verMensajesDeSeguimiento(Scanner scanner) {
+    	try {
+            System.out.print("Ingrese el ID del ejemplar que desea consultar mensajes de seguimiento: ");
+            long idEjemplar = scanner.nextLong();
+            scanner.nextLine(); 
+
+            
+            Set<Mensaje> mensajes = mensajeServicio.obtenerMensajesPorEjemplar(idEjemplar);
+
+            // Verificar si hay mensajes asociados
+            if (mensajes.isEmpty()) {
+                System.out.println("No hay mensajes de seguimiento para este ejemplar.");
+                return;
+            }
+
+            // Mostrar los mensajes cronológicamente
+            System.out.println("\nMensajes de seguimiento para el ejemplar con ID " + idEjemplar + ":");
+            System.out.println("-------------------------------------------------");
+
+            // Iterar sobre los mensajes y mostrar los detalles
+            for (Mensaje mensaje : mensajes) {
+                // Obtener el nombre de la persona que anotó el mensaje
+                Persona persona = personaServicio.buscarPorId(mensaje.getPersona());
+                String nombrePersona = (persona != null) ? persona.getNombre() : "Desconocido";
+
+                // Mostrar detalles del mensaje
+                System.out.println("Fecha/Hora: " + mensaje.getFechaHora());
+                System.out.println("Mensaje: " + mensaje.getMensaje());
+                System.out.println("Anotado por: " + nombrePersona);
+                System.out.println("-------------------------------------------------");
+            }
+
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida. Por favor, ingrese un número válido para el ID.");
+            scanner.nextLine(); // Limpiar el buffer de entrada
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al consultar los mensajes de seguimiento: " + e.getMessage());
+        }
     }
 }

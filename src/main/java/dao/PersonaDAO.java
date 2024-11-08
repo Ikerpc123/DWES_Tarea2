@@ -3,7 +3,6 @@ package dao;
 import java.util.Set;
 
 import modelo.Persona;
-import modelo.Planta;
 
 public interface PersonaDAO {
 	

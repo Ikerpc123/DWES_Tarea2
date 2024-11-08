@@ -9,7 +9,6 @@ import java.util.Set;
 
 import dao.PersonaDAO;
 import modelo.Persona;
-import modelo.Planta;
 
 public class PersonaDAOImpl implements PersonaDAO{
 	private Connection con;

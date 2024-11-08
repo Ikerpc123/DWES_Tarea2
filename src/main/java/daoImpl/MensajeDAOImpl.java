@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import modelo.Mensaje;
@@ -121,6 +123,148 @@ public class MensajeDAOImpl implements MensajeDAO{
             rs.close();
         } catch (SQLException e) {
             System.out.println("Error al obtener todas las plantas: " + e.getMessage());
+        }
+        return mensajes;
+    }
+    
+    @Override
+    public Set<Mensaje> findMensajesByEjemplarId(long idEjemplar) {
+    	Set<Mensaje> mensajes = new HashSet<>();
+        try {
+            // Realizar un JOIN para obtener el nombre de la persona que anotó el mensaje
+            ps = con.prepareStatement(
+                "SELECT m.*, p.nombre AS persona_nombre " +
+                "FROM mensajes m " +
+                "JOIN personas p ON m.persona_id = p.id " +
+                "WHERE m.ejemplar_id = ? " +
+                "ORDER BY m.fechahora ASC"
+            );
+            ps.setLong(1, idEjemplar);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                // Crear el objeto Mensaje con los datos existentes
+                Mensaje mensaje = new Mensaje(
+                    rs.getLong("id"),
+                    rs.getTimestamp("fechahora"),
+                    rs.getString("mensaje"),
+                    rs.getLong("persona_id"),
+                    rs.getLong("ejemplar_id")
+                );
+
+                // Obtener el nombre de la persona directamente del ResultSet
+                String personaNombre = rs.getString("persona_nombre");
+
+                // Mostrar el mensaje y el nombre de la persona
+                System.out.println("Fecha/Hora: " + mensaje.getFechaHora());
+                System.out.println("Mensaje: " + mensaje.getMensaje());
+                System.out.println("Anotado por: " + personaNombre);
+                System.out.println("-----------------------------");
+
+                // Agregar el mensaje a la lista si es necesario
+                mensajes.add(mensaje);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error al obtener mensajes del ejemplar: " + e.getMessage());
+        }
+        return mensajes;
+    }
+    
+    @Override
+    public Set<Mensaje> findByPersona(long idPersona) {
+        Set<Mensaje> mensajes = new HashSet<>();
+        try {
+            // Consulta para obtener los mensajes de una persona específica
+            ps = con.prepareStatement(
+                "SELECT m.*, p.nombre AS persona_nombre " +
+                "FROM mensajes m " +
+                "JOIN personas p ON m.persona_id = p.id " +
+                "WHERE m.persona_id = ? " +
+                "ORDER BY m.fechahora ASC"
+            );
+            ps.setLong(1, idPersona);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Mensaje mensaje = new Mensaje(
+                    rs.getLong("id"),
+                    rs.getTimestamp("fechahora"),
+                    rs.getString("mensaje"),
+                    rs.getLong("persona_id"),
+                    rs.getLong("ejemplar_id")
+                );
+                mensajes.add(mensaje);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error al filtrar mensajes por persona: " + e.getMessage());
+        }
+        return mensajes;
+    }
+
+    @Override
+    public Set<Mensaje> findByFechaRango(String fechaInicio, String fechaFin) {
+        Set<Mensaje> mensajes = new HashSet<>();
+        try {
+            // Consulta para obtener los mensajes dentro de un rango de fechas
+            ps = con.prepareStatement(
+                "SELECT m.*, p.nombre AS persona_nombre " +
+                "FROM mensajes m " +
+                "JOIN personas p ON m.persona_id = p.id " +
+                "WHERE m.fechahora BETWEEN ? AND ? " +
+                "ORDER BY m.fechahora ASC"
+            );
+            ps.setTimestamp(1, Timestamp.valueOf(fechaInicio + " 00:00:00"));
+            ps.setTimestamp(2, Timestamp.valueOf(fechaFin + " 23:59:59"));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Mensaje mensaje = new Mensaje(
+                    rs.getLong("id"),
+                    rs.getTimestamp("fechahora"),
+                    rs.getString("mensaje"),
+                    rs.getLong("persona_id"),
+                    rs.getLong("ejemplar_id")
+                );
+                mensajes.add(mensaje);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error al filtrar mensajes por rango de fechas: " + e.getMessage());
+        }
+        return mensajes;
+    }
+
+    @Override
+    public Set<Mensaje> findByPlanta(String codigoPlanta) {
+    	Set<Mensaje> mensajes = new HashSet<>();
+        try {
+            // Consulta para obtener los mensajes según el tipo de planta
+            ps = con.prepareStatement(
+                "SELECT m.*, p.nombre AS persona_nombre " +
+                "FROM mensajes m " +
+                "JOIN ejemplares e ON m.ejemplar_id = e.id " +
+                "JOIN plantas pl ON e.planta_id = pl.id " +
+                "JOIN personas p ON m.persona_id = p.id " +
+                "WHERE pl.codigo = ? " +
+                "ORDER BY m.fechahora ASC"
+            );
+            ps.setString(1, codigoPlanta);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Mensaje mensaje = new Mensaje(
+                    rs.getLong("id"),
+                    rs.getTimestamp("fechahora"),
+                    rs.getString("mensaje"),
+                    rs.getLong("persona_id"),
+                    rs.getLong("ejemplar_id")
+                );
+                mensajes.add(mensaje);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error al filtrar mensajes por tipo de planta: " + e.getMessage());
         }
         return mensajes;
     }

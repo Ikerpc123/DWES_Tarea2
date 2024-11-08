@@ -1,14 +1,7 @@
 package servicioImpl;
 
-import java.util.Set;
-
-import dao.CredencialesDAO;
 import dao.PersonaDAO;
-import dao.PlantaDAO;
-import modelo.Credenciales;
 import modelo.Persona;
-import modelo.Planta;
-import servicios.CredencialServicio;
 import servicios.PersonaServicio;
 
 public class PersonaServicioImpl implements PersonaServicio {
@@ -43,7 +36,6 @@ public class PersonaServicioImpl implements PersonaServicio {
         return false;
     }
     
- // Método que verifica si ya existe una persona con el mismo nombre
     public Persona buscarPorNombre(String nombre) {
         Persona personaExistente = personaDAO.findByNombre(nombre);
         return personaExistente;
@@ -54,4 +46,11 @@ public class PersonaServicioImpl implements PersonaServicio {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public Persona buscarPorId(Long id) {
+        Persona personaExistente = personaDAO.findById(id);
+        return personaExistente;
+    }
+	
 }

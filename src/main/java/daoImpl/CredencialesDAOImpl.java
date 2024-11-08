@@ -9,7 +9,6 @@ import java.util.Set;
 
 import dao.CredencialesDAO;
 import modelo.Credenciales;
-import modelo.Planta;
 
 public class CredencialesDAOImpl implements CredencialesDAO{
 	private Connection con;

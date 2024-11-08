@@ -1,5 +1,6 @@
 package servicioImpl;
 
+import java.util.List;
 import java.util.Set;
 
 import dao.MensajeDAO;
@@ -41,5 +42,33 @@ public class MensajeServicioImpl implements MensajeServicio {
     @Override
     public Set<Mensaje> obtenerTodosMensajes(){
     	return mensajeDAO.findAll();
+    }
+    
+    @Override
+    public Set<Mensaje> obtenerMensajesPorEjemplar(long idEjemplar) {
+        return mensajeDAO.findMensajesByEjemplarId(idEjemplar); // Este método devuelve los mensajes de un ejemplar en orden cronológico.
+    }
+    
+    public boolean anotarMensaje(long idEjemplar, long idPersona, String contenido) {
+        Mensaje mensaje = new Mensaje();
+        mensaje.setEjemplar(idEjemplar);
+        mensaje.setPersona(idPersona);
+        mensaje.setMensaje(contenido);
+        return mensajeDAO.insertar(mensaje) > 0;
+    }
+
+    @Override
+    public Set<Mensaje> filtrarMensajesPorPersona(long idPersona) {
+        return mensajeDAO.findByPersona(idPersona);
+    }
+
+    @Override
+    public Set<Mensaje> filtrarMensajesPorRangoFechas(String fechaInicio, String fechaFin) {
+        return mensajeDAO.findByFechaRango(fechaInicio, fechaFin);
+    }
+
+    @Override
+    public Set<Mensaje> filtrarMensajesPorTipoPlanta(String codigoPlanta) {
+        return mensajeDAO.findByPlanta(codigoPlanta);
     }
 }

@@ -49,7 +49,8 @@ public class MenuAdmin {
 
             MenuPlanta menuPlanta = new MenuPlanta();
             MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
-            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, usuario);
+            MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, personaServicio, usuario);
+            MenuMensaje menuMensajes = new MenuMensaje(mensajeServicio, personaServicio, plantaServicio, scanner);
             
             switch (opcion) {
                 case 1:
@@ -59,7 +60,7 @@ public class MenuAdmin {
                 	menuEjemplar.mostrarMenu();
                     break;
                 case 3:
-                	
+                	menuMensajes.mostrarMenuMensajes();
                     break;
                 case 4:
                 	menuRegistro.mostrarMenuRegistro();
