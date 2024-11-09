@@ -1,5 +1,6 @@
 package vista;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import servicios.CredencialServicio;
@@ -17,11 +18,10 @@ public class MenuAdmin {
 	private MensajeServicio mensajeServicio;
 	private String usuario;
 	
-	public MenuAdmin() {
-		
-	}
+	public MenuAdmin() {}
 
-    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
+    public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, 
+    		EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
         this.plantaServicio = plantaServicio;
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
@@ -31,47 +31,68 @@ public class MenuAdmin {
     }
     
 	public void mostrarMenu() {
-		
         Scanner scanner = new Scanner(System.in);
-        int opcion;
-        
+        int opcion = -1;
+
         do {
-            System.out.println("\n--- Menú Administrador ---");
-            System.out.println("1. Gestionar plantas");
-            System.out.println("2. Gestionar ejemplares");
-            System.out.println("3. Gestionar mensajes");
-            System.out.println("4. Registrar persona");
-            System.out.println("5. Cerrar Sesión");
+            System.out.println("\n======= Menú Administrador =======");
+            System.out.println("  1. Gestionar plantas");
+            System.out.println("  2. Gestionar ejemplares");
+            System.out.println("  3. Gestionar mensajes");
+            System.out.println("  4. Registrar persona");
+            System.out.println("  5. Cerrar Sesión");
+            System.out.println("==================================");
 
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            // Validación de entrada del usuario
+            boolean entradaValida = false;
+            while (!entradaValida) {
+                try {
+                    System.out.print("Seleccione una opción (1-5): ");
+                    opcion = Integer.parseInt(scanner.nextLine());  // Usamos `nextLine` y parseamos para evitar problemas de salto de línea
+                    if (opcion >= 1 && opcion <= 5) {
+                        entradaValida = true;
+                    } else {
+                        System.out.println("Error: Seleccione una opción válida entre 1 y 5.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un número válido.");
+                }
+            }
 
+            // Instancias de los submenús
             MenuPlanta menuPlanta = new MenuPlanta();
             MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
             MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, personaServicio, usuario);
             MenuMensaje menuMensajes = new MenuMensaje(mensajeServicio, personaServicio, plantaServicio, scanner);
-            
+
+            // Manejo de las opciones
             switch (opcion) {
                 case 1:
-                	menuPlanta.gestionarPlanta(plantaServicio);
+                    System.out.println("\n--- Gestión de Plantas ---");
+                    menuPlanta.gestionarPlanta(plantaServicio);
                     break;
                 case 2:
-                	menuEjemplar.mostrarMenu();
+                    System.out.println("\n--- Gestión de Ejemplares ---");
+                    menuEjemplar.mostrarMenu();
                     break;
                 case 3:
-                	menuMensajes.mostrarMenuMensajes();
+                    System.out.println("\n--- Gestión de Mensajes ---");
+                    menuMensajes.mostrarMenuMensajes();
                     break;
                 case 4:
-                	menuRegistro.mostrarMenuRegistro();
+                    System.out.println("\n--- Registro de Persona ---");
+                    menuRegistro.mostrarMenuRegistro();
                     break;
                 case 5:
-                    System.out.println("Saliendo del menú administrador...");
+                    System.out.println("Cerrando sesión...");
                     break;
                 default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
+                    System.out.println("Error: Opción no válida.");
+                    break;
             }
+
         } while (opcion != 5);
 
+        System.out.println("Sesión finalizada. Hasta luego.");
     }
 }

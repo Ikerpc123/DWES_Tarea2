@@ -1,8 +1,9 @@
 package vista;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
 public class MenuMensaje {
-	private final MensajeServicio mensajeServicio;
+    private final MensajeServicio mensajeServicio;
     private final PersonaServicio personaServicio;
     private final PlantaServicio plantaServicio;
     private final Scanner scanner;
@@ -36,45 +37,43 @@ public class MenuMensaje {
             System.out.println("2. Mostrar mensajes filtrados");
             System.out.println("3. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            opcion = leerOpcion();
 
             switch (opcion) {
                 case 1:
-                	anotarMensajeSeguimiento();
+                    anotarMensajeSeguimiento();
+                    break;
                 case 2:
-                	mostrarMensajesFiltrados();
+                    mostrarMensajesFiltrados();
+                    break;
                 case 3:
-                	System.out.println("Saliendo del menú de mensajes...");
+                    System.out.println("Saliendo del menú de mensajes...");
+                    break;
                 default:
-                	System.out.println("Opción no válida. Intente de nuevo.");
+                    System.out.println("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 3);
     }
 
     // Método para anotar un nuevo mensaje
     private void anotarMensajeSeguimiento() {
-    	Date fechaActual = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-    	SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-    	String fechaFormateada = formatoFecha.format(fechaActual);
-    	
+        LocalDateTime fechaActual = LocalDateTime.now();
+        
         try {
             System.out.print("Ingrese el ID del ejemplar a seguir: ");
             long idEjemplar = scanner.nextLong();
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine();
 
             System.out.print("Ingrese el ID de la persona que realiza la anotación: ");
             long idPersona = scanner.nextLong();
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine();
 
             System.out.print("Ingrese el mensaje de seguimiento: ");
             String contenidoMensaje = scanner.nextLine();
-            
-            Mensaje mensaje = new Mensaje(null, fechaActual, contenidoMensaje, idPersona, idEjemplar);
 
-            // Registrar el mensaje de seguimiento
+            Mensaje mensaje = new Mensaje(null, Date.from(fechaActual.atZone(ZoneId.systemDefault()).toInstant()), contenidoMensaje, idPersona, idEjemplar);
+
             boolean resultado = mensajeServicio.insertarMensaje(mensaje);
-
             if (resultado) {
                 System.out.println("Mensaje registrado exitosamente.");
             } else {
@@ -82,7 +81,7 @@ public class MenuMensaje {
             }
         } catch (InputMismatchException e) {
             System.out.println("Entrada inválida. Por favor, ingrese datos correctos.");
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine();
         }
     }
 
@@ -96,20 +95,23 @@ public class MenuMensaje {
             System.out.println("3. Filtrar por tipo de planta");
             System.out.println("4. Volver");
             System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // Limpiar buffer
+            opcion = leerOpcion();
 
             switch (opcion) {
                 case 1:
-                	filtrarPorPersona();
+                    filtrarPorPersona();
+                    break;
                 case 2:
-                	filtrarPorRangoFechas();
+                    filtrarPorRangoFechas();
+                    break;
                 case 3:
-                	filtrarPorTipoPlanta();
+                    filtrarPorTipoPlanta();
+                    break;
                 case 4:
-                	System.out.println("Volviendo al menú anterior...");
-                default: 
-                	System.out.println("Opción no válida. Intente de nuevo.");
+                    System.out.println("Volviendo al menú anterior...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 4);
     }
@@ -117,9 +119,7 @@ public class MenuMensaje {
     // Filtrar mensajes por persona
     private void filtrarPorPersona() {
         System.out.print("Ingrese el ID de la persona: ");
-        long idPersona = scanner.nextLong();
-        scanner.nextLine(); // Limpiar buffer
-
+        long idPersona = leerLong();
         Set<Mensaje> mensajes = mensajeServicio.filtrarMensajesPorPersona(idPersona);
         mostrarMensajes(mensajes);
     }
@@ -143,7 +143,6 @@ public class MenuMensaje {
     private void filtrarPorTipoPlanta() {
         System.out.print("Ingrese el código de la planta: ");
         String codigoPlanta = scanner.nextLine();
-
         Set<Mensaje> mensajes = mensajeServicio.filtrarMensajesPorTipoPlanta(codigoPlanta);
         mostrarMensajes(mensajes);
     }
@@ -157,9 +156,30 @@ public class MenuMensaje {
             for (Mensaje mensaje : mensajes) {
                 Persona persona = personaServicio.buscarPorId(mensaje.getPersona());
                 String nombrePersona = (persona != null) ? persona.getNombre() : "Desconocido";
-                System.out.printf("Fecha: %s | Mensaje: %s | Persona: %s\n",
+                System.out.printf("Fecha: %s | Mensaje: %s | Persona: %s%n",
                         mensaje.getFechaHora(), mensaje.getMensaje(), nombrePersona);
             }
+        }
+    }
+
+    // Métodos auxiliares para manejo de entradas
+    private int leerOpcion() {
+        try {
+            return scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida. Ingrese un número.");
+            scanner.nextLine();
+            return -1;
+        }
+    }
+
+    private long leerLong() {
+        try {
+            return scanner.nextLong();
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida. Ingrese un número válido.");
+            scanner.nextLine();
+            return -1;
         }
     }
 }

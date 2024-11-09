@@ -2,211 +2,172 @@ package vista;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-
-import daoImpl.CredencialesDAOImpl;
-import daoImpl.PersonaDAOImpl;
-import daoImpl.PlantaDAOImpl;
-import modelo.Credenciales;
-import modelo.Ejemplar;
-import modelo.Mensaje;
-import modelo.Persona;
-import modelo.Planta;
-import servicioImpl.CredencialServicioImpl;
-import servicioImpl.PersonaServicioImpl;
-import servicioImpl.PlantaServicioImpl;
-import servicios.CredencialServicio;
-import servicios.EjemplarServicio;
-import servicios.MensajeServicio;
-import servicios.PersonaServicio;
-import servicios.PlantaServicio;
+import java.util.*;
+import daoImpl.*;
+import modelo.*;
+import servicioImpl.*;
+import servicios.*;
 
 public class MenuEjemplar {
 
-	PlantaServicio plantaServicio;
-	EjemplarServicio ejemplarServicio;
-	MensajeServicio mensajeServicio;
-	PersonaServicio personaServicio;
-	CredencialServicio credencialServicio;
-	String usuario;
-	
-	public MenuEjemplar(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, CredencialServicio credencialServicio, PersonaServicio personaServicio, String usuario) {
-		this.plantaServicio = plantaServicio;
-		this.ejemplarServicio = ejemplarServicio;
-		this.mensajeServicio = mensajeServicio;
-		this.credencialServicio = credencialServicio;
-		this.personaServicio = personaServicio;
-		this.usuario = usuario;
-    }
-	
-	public void mostrarMenu() {
-    	
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
-        try {
-        	do {
-	            System.out.println("\n--- Gestión Ejemplares ---");
-	            System.out.println("1. Registrar nuevo ejemplar");
-	            System.out.println("2. Filtrar por tipo de planta");
-	            System.out.println("3. Ver mensajes de un ejemplar");
-	            System.out.println("4. Volver");
-	
-	            System.out.print("Seleccione una opción: ");
-	            opcion = scanner.nextInt();
-	            scanner.nextLine(); // Consumir la nueva línea
-	        	switch (opcion) {
-	            case 1:
-	            	registrarEjemplar(scanner);
-	                break;
-	            case 2:
-	            	filtrarPlanta(scanner);
-	                break;
-	            case 3:
-	            	verMensajesDeSeguimiento(scanner);
-	                break;
-	            case 4:
-	            	System.out.println("\nVolviendo...");
-	                break;
-	            default:
-	                System.out.println("Opción no válida. Intente nuevamente.");
-	        	}	
-        	} while (opcion != 4);
-        	
-        }
-		catch (InputMismatchException e) {
-			System.out.print("\nInserte valores numéricos \n");
-			mostrarMenu();
-		}
-        
+    // Servicios necesarios para la gestión
+    PlantaServicio plantaServicio;
+    EjemplarServicio ejemplarServicio;
+    MensajeServicio mensajeServicio;
+    PersonaServicio personaServicio;
+    CredencialServicio credencialServicio;
+    String usuario;
+
+    // Constructor
+    public MenuEjemplar(PlantaServicio plantaServicio, EjemplarServicio ejemplarServicio, 
+                        MensajeServicio mensajeServicio, CredencialServicio credencialServicio, 
+                        PersonaServicio personaServicio, String usuario) {
+        this.plantaServicio = plantaServicio;
+        this.ejemplarServicio = ejemplarServicio;
+        this.mensajeServicio = mensajeServicio;
+        this.credencialServicio = credencialServicio;
+        this.personaServicio = personaServicio;
+        this.usuario = usuario;
     }
 
-    private void registrarEjemplar(Scanner scanner) {
-    	
-    	Date fechaActual = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-    	SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-    	String fechaFormateada = formatoFecha.format(fechaActual);
-    	
-    	try {
-	            System.out.println("\n--- Registro de ejemplar ---");
-	            System.out.println("Inserta el identificador de la planta: ");
-	            String idPlanta = scanner.nextLine();
-	            
-	            Planta buscaPlanta = plantaServicio.findbyId(idPlanta);
-	            if(buscaPlanta != null)
-	            {
-	            	Ejemplar nuevoEjemplar = new Ejemplar(null, null, idPlanta);
-	            	ejemplarServicio.agregarEjemplar(nuevoEjemplar);
-	            	Set<Ejemplar> todosEjemplares = ejemplarServicio.obtenerTodosEjemplares();
-	            	
-	            	List<Ejemplar> listaEjemplares = new ArrayList<>(todosEjemplares);
-	            	Ejemplar ultimoEjemplar = listaEjemplares.get(0);
-	            	ejemplarServicio.modificarEjemplar(ultimoEjemplar);
-	            	
-	            	Credenciales idPersona = credencialServicio.buscarPorUsuario(usuario);
-	            	
-	            	Mensaje mensaje = new Mensaje(	null, fechaActual, 
-	            									"Autor: " +usuario+ " Fecha: " + fechaFormateada, 
-	            									idPersona.getId(), 
-	            									ultimoEjemplar.getId());
-	            	
-	            	mensajeServicio.insertarMensaje(mensaje);
-	            	
-	            }
-	            else {
-	            	 System.out.println("\nNo existe el identificador de la planta insertado");
-	            }
-	            
-    	}
-		catch (InputMismatchException e) {
-			System.out.print("\nInserte valores permitidos \n");
-			mostrarMenu();
-		}
+    // Método para mostrar el menú principal
+    public void mostrarMenu() {
+        Scanner scanner = new Scanner(System.in);
+        int opcion = -1;
+
+        do {
+            System.out.println("\n======= Gestión Ejemplares =======");
+            System.out.println("  1. Registrar nuevo ejemplar");
+            System.out.println("  2. Filtrar por tipo de planta");
+            System.out.println("  3. Ver mensajes de un ejemplar");
+            System.out.println("  4. Volver");
+            System.out.println("==================================");
+
+            opcion = leerOpcion(scanner, 1, 4);
+
+            switch (opcion) {
+                case 1:
+                    registrarEjemplar(scanner);
+                    break;
+                case 2:
+                    filtrarPlanta(scanner);
+                    break;
+                case 3:
+                    verMensajesDeSeguimiento(scanner);
+                    break;
+                case 4:
+                    System.out.println("\nVolviendo al menú principal...");
+                    break;
+            }
+        } while (opcion != 4);
     }
-    
+
+    // Método para registrar un nuevo ejemplar
+    private void registrarEjemplar(Scanner scanner) {
+        Date fechaActual = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaFormateada = formatoFecha.format(fechaActual);
+
+        try {
+            System.out.println("\n--- Registro de Ejemplar ---");
+            System.out.print("Ingrese el identificador de la planta: ");
+            String idPlanta = scanner.nextLine().trim();
+
+            Planta planta = plantaServicio.findbyId(idPlanta);
+            if (planta != null) {
+                Ejemplar nuevoEjemplar = new Ejemplar(null, null, idPlanta);
+                ejemplarServicio.agregarEjemplar(nuevoEjemplar);
+                
+                Set<Ejemplar> ejemplares = ejemplarServicio.obtenerTodosEjemplares();
+                List<Ejemplar> listaEjemplares = new ArrayList<>(ejemplares);
+                Ejemplar ultimoEjemplar = listaEjemplares.get(0);
+
+                Credenciales credenciales = credencialServicio.buscarPorUsuario(usuario);
+                Mensaje mensaje = new Mensaje(null, fechaActual, 
+                                              "Autor: " + usuario + " Fecha: " + fechaFormateada, 
+                                              credenciales.getId(), ultimoEjemplar.getId());
+                
+                mensajeServicio.insertarMensaje(mensaje);
+                System.out.println("Ejemplar registrado exitosamente.");
+            } else {
+                System.out.println("No existe una planta con el identificador proporcionado.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al registrar el ejemplar: " + e.getMessage());
+        }
+    }
+
+    // Método para filtrar ejemplares por tipo de planta
     private void filtrarPlanta(Scanner scanner) {
         try {
-            String input = "";
             Set<String> plantas = new HashSet<>();
-            
+            String input;
+
             while (true) {
                 System.out.print("Ingrese un código de planta (escriba 'fin' para terminar): ");
                 input = scanner.nextLine().trim();
-                
+
                 if (input.equalsIgnoreCase("fin")) {
                     break;
                 }
-                
+
                 plantas.add(input);
             }
-            
+
             List<Planta> plantasSeleccionadas = new ArrayList<>();
-            for (String codigoPlanta : plantas) {
-                Planta planta = plantaServicio.findbyId(codigoPlanta);
+            for (String codigo : plantas) {
+                Planta planta = plantaServicio.findbyId(codigo);
                 if (planta != null) {
                     plantasSeleccionadas.add(planta);
                 } else {
-                    System.out.println("No se encontró la planta con código: " + codigoPlanta);
+                    System.out.println("Planta con código '" + codigo + "' no encontrada.");
                 }
             }
-            
+
             if (!plantasSeleccionadas.isEmpty()) {
                 mostrarTablaEjemplares(plantasSeleccionadas);
             } else {
-                System.out.println("No se seleccionaron plantas válidas.");
+                System.out.println("No se encontraron plantas válidas.");
             }
-            
-        } catch (InputMismatchException e) {
-            System.out.print("\nInserte valores permitidos\n");
-            mostrarMenu();
+        } catch (Exception e) {
+            System.out.println("Error al filtrar plantas: " + e.getMessage());
         }
     }
 
-    
-    private  void mostrarTablaEjemplares(List<Planta> plantas) {
-        System.out.printf("\nNombre Ejemplar      Planta          Nº de Mensajes            Fecha Último Mensaje");
-        System.out.println("\n-------------------------------------------------------------------------------------------");
+    // Método para mostrar una tabla de ejemplares
+    private void mostrarTablaEjemplares(List<Planta> plantas) {
+        System.out.printf("\n%-20s %-15s %-25s %s%n", 
+                          "Nombre Ejemplar", "Planta", "Nº Mensajes", "Último Mensaje");
+        System.out.println("-------------------------------------------------------------");
 
         for (Planta planta : plantas) {
-        	
-            // Obtener ejemplares de la planta seleccionada
             Set<Ejemplar> ejemplares = ejemplarServicio.obtenerTodosEjemplares();
-            
+
             for (Ejemplar ejemplar : ejemplares) {
                 if (ejemplar.getIdPlanta().equals(planta.getCodigo())) {
-                	
-                    // Contar mensajes asociados y obtener la fecha/hora del último mensaje
                     int numMensajes = contarMensajes(ejemplar);
+                    Date ultimaFecha = obtenerUltimaFechaMensaje(ejemplar);
                     
-                    Date ultimaFechaMensaje = obtenerUltimaFechaMensaje(ejemplar);
-
-                    // Mostrar la información en la tabla
                     System.out.printf("%-20s %-15s %-25d %s%n",
-                            ejemplar.getNombre(),
-                            planta.getNombreComun(),
-                            numMensajes,
-                            (ultimaFechaMensaje != null ? ultimaFechaMensaje.toString() : "Sin mensajes"));
+                                      ejemplar.getNombre(),
+                                      planta.getNombreComun(),
+                                      numMensajes,
+                                      (ultimaFecha != null ? ultimaFecha.toString() : "Sin mensajes"));
                 }
             }
         }
     }
-    
+
+    // Método para contar el número de mensajes de un ejemplar
     private int contarMensajes(Ejemplar ejemplar) {
-        // Método que cuenta el número de mensajes para un ejemplar específico
         Set<Mensaje> mensajes = mensajeServicio.obtenerTodosMensajes();
         return (int) mensajes.stream().filter(m -> m.getEjemplar() == ejemplar.getId()).count();
     }
-    
+
+    // Método para obtener la última fecha de mensaje de un ejemplar
     private Date obtenerUltimaFechaMensaje(Ejemplar ejemplar) {
-        // Método que obtiene la fecha del último mensaje para un ejemplar específico
         Set<Mensaje> mensajes = mensajeServicio.obtenerTodosMensajes();
         return mensajes.stream()
                 .filter(m -> m.getEjemplar() == ejemplar.getId())
@@ -214,44 +175,53 @@ public class MenuEjemplar {
                 .max(Date::compareTo)
                 .orElse(null);
     }
-    
-    private void verMensajesDeSeguimiento(Scanner scanner) {
-    	try {
-            System.out.print("Ingrese el ID del ejemplar que desea consultar mensajes de seguimiento: ");
-            long idEjemplar = scanner.nextLong();
-            scanner.nextLine(); 
 
-            
+    // Método para ver mensajes de seguimiento
+    private void verMensajesDeSeguimiento(Scanner scanner) {
+        try {
+            System.out.print("Ingrese el ID del ejemplar: ");
+            long idEjemplar = scanner.nextLong();
+            scanner.nextLine();
+
             Set<Mensaje> mensajes = mensajeServicio.obtenerMensajesPorEjemplar(idEjemplar);
 
-            // Verificar si hay mensajes asociados
             if (mensajes.isEmpty()) {
-                System.out.println("No hay mensajes de seguimiento para este ejemplar.");
+                System.out.println("No hay mensajes para este ejemplar.");
                 return;
             }
 
-            // Mostrar los mensajes cronológicamente
-            System.out.println("\nMensajes de seguimiento para el ejemplar con ID " + idEjemplar + ":");
-            System.out.println("-------------------------------------------------");
-
-            // Iterar sobre los mensajes y mostrar los detalles
+            System.out.println("\nMensajes de seguimiento:");
             for (Mensaje mensaje : mensajes) {
-                // Obtener el nombre de la persona que anotó el mensaje
                 Persona persona = personaServicio.buscarPorId(mensaje.getPersona());
-                String nombrePersona = (persona != null) ? persona.getNombre() : "Desconocido";
+                String nombre = (persona != null) ? persona.getNombre() : "Desconocido";
 
-                // Mostrar detalles del mensaje
-                System.out.println("Fecha/Hora: " + mensaje.getFechaHora());
+                System.out.println("Fecha: " + mensaje.getFechaHora());
                 System.out.println("Mensaje: " + mensaje.getMensaje());
-                System.out.println("Anotado por: " + nombrePersona);
-                System.out.println("-------------------------------------------------");
+                System.out.println("Autor: " + nombre);
+                System.out.println("------------------------------");
             }
-
         } catch (InputMismatchException e) {
-            System.out.println("Entrada inválida. Por favor, ingrese un número válido para el ID.");
-            scanner.nextLine(); // Limpiar el buffer de entrada
+            System.out.println("Entrada inválida. Ingrese un ID válido.");
+            scanner.nextLine();
         } catch (Exception e) {
-            System.out.println("Ocurrió un error al consultar los mensajes de seguimiento: " + e.getMessage());
+            System.out.println("Error al consultar mensajes: " + e.getMessage());
+        }
+    }
+
+    // Método auxiliar para leer opciones numéricas
+    private int leerOpcion(Scanner scanner, int min, int max) {
+        int opcion;
+        while (true) {
+            try {
+                System.out.print("Seleccione una opción: ");
+                opcion = Integer.parseInt(scanner.nextLine());
+                if (opcion >= min && opcion <= max) {
+                    return opcion;
+                }
+                System.out.println("Opción fuera de rango. Intente nuevamente.");
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida. Ingrese un número.");
+            }
         }
     }
 }
