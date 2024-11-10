@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-10-2024 a las 15:47:03
+-- Tiempo de generación: 10-11-2024 a las 15:00:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -36,6 +36,13 @@ CREATE TABLE `credenciales` (
   `persona_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `credenciales`
+--
+
+INSERT INTO `credenciales` (`id`, `usuario`, `password`, `persona_id`) VALUES
+(0, 'admin', 'admin', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -44,7 +51,7 @@ CREATE TABLE `credenciales` (
 
 CREATE TABLE `ejemplares` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(25) NOT NULL,
+  `nombre` varchar(25) DEFAULT NULL,
   `idplanta` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -73,6 +80,13 @@ CREATE TABLE `personas` (
   `nombre` varchar(50) NOT NULL,
   `email` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`id`, `nombre`, `email`) VALUES
+(0, 'admin', 'admin');
 
 -- --------------------------------------------------------
 
@@ -131,12 +145,6 @@ ALTER TABLE `plantas`
 --
 
 --
--- AUTO_INCREMENT de la tabla `personas`
---
-ALTER TABLE `personas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-  
---
 -- AUTO_INCREMENT de la tabla `credenciales`
 --
 ALTER TABLE `credenciales`
@@ -152,6 +160,12 @@ ALTER TABLE `ejemplares`
 -- AUTO_INCREMENT de la tabla `mensajes`
 --
 ALTER TABLE `mensajes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `personas`
+--
+ALTER TABLE `personas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
