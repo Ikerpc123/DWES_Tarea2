@@ -1,14 +1,23 @@
 package vista;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 import modelo.Planta;
 import servicios.PlantaServicio;
 
+/**
+ * Clase que representa el menú de opciones para gestionar plantas, 
+ * tanto para un invitado como para un usuario con privilegios de gestión.
+ */
 public class MenuPlanta {
 
-    // Método para mostrar el menú de un invitado
+    /**
+     * Método que muestra el menú para un invitado. Permite al invitado ver las plantas 
+     * o volver al menú principal.
+     * 
+     * @param scanner Objeto Scanner para leer las entradas del usuario.
+     * @param plantaServicio Servicio para interactuar con las plantas.
+     */
     public void menuInvitado(Scanner scanner, PlantaServicio plantaServicio) {
         int opcion = -1;
 
@@ -27,10 +36,10 @@ public class MenuPlanta {
                     if (opcion >= 1 && opcion <= 2) {
                         entradaValida = true;
                     } else {
-                        System.out.println("Error: Seleccione una opción válida entre 1 y 2.");
+                        System.err.println("Error: Seleccione una opción válida entre 1 y 2.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Ingrese un número válido.");
+                    System.err.println("Error: Ingrese un número válido.");
                 }
             }
 
@@ -39,15 +48,19 @@ public class MenuPlanta {
                     verPlantas(plantaServicio);
                     break;
                 case 2:
-                    System.out.println("\nVolviendo al menú principal...");
+                    System.err.println("\nVolviendo al menú principal...");
                     break;
                 default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
+                    System.err.println("Opción no válida. Intente nuevamente.");
             }
         } while (opcion != 2);
     }
 
-    // Método para ver todas las plantas
+    /**
+     * Método para ver todas las plantas registradas en el sistema.
+     * 
+     * @param plantaServicio Servicio para obtener las plantas.
+     */
     public void verPlantas(PlantaServicio plantaServicio) {
         Set<Planta> plantas = plantaServicio.obtenerTodas();
         if (plantas.isEmpty()) {
@@ -63,7 +76,11 @@ public class MenuPlanta {
         }
     }
 
-    // Método para insertar una nueva planta
+    /**
+     * Método para insertar una nueva planta en el sistema.
+     * 
+     * @param plantaServicio Servicio para agregar la planta.
+     */
     public void insertarPlanta(PlantaServicio plantaServicio) {
         Scanner scanner = new Scanner(System.in);
 
@@ -83,11 +100,15 @@ public class MenuPlanta {
         if (exito) {
             System.out.println("Planta insertada correctamente.");
         } else {
-            System.out.println("Error al insertar la planta. Verifique los datos e intente nuevamente.");
+            System.err.println("Error al insertar la planta. Verifique los datos e intente nuevamente.");
         }
     }
 
-    // Método para gestionar plantas
+    /**
+     * Método para gestionar las plantas. Permite insertar, modificar o salir del menú de gestión de plantas.
+     * 
+     * @param plantaServicio Servicio para gestionar las plantas.
+     */
     public void gestionarPlanta(PlantaServicio plantaServicio) {
         Scanner scanner = new Scanner(System.in);
         int opcion = -1;
@@ -111,7 +132,7 @@ public class MenuPlanta {
                         System.out.println("Error: Seleccione una opción válida entre 1 y 3.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Ingrese un número válido.");
+                    System.err.println("Error: Ingrese un número válido.");
                 }
             }
 
@@ -123,15 +144,19 @@ public class MenuPlanta {
                     modificarPlanta(plantaServicio);
                     break;
                 case 3:
-                    System.out.println("Saliendo de la gestión de plantas...");
+                    System.err.println("Saliendo de la gestión de plantas...");
                     break;
                 default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
+                    System.err.println("Opción no válida. Intente nuevamente.");
             }
         } while (opcion != 3);
     }
 
-    // Método para modificar una planta
+    /**
+     * Método para modificar una planta existente en el sistema.
+     * 
+     * @param plantaServicio Servicio para actualizar la planta.
+     */
     public void modificarPlanta(PlantaServicio plantaServicio) {
         Scanner scanner = new Scanner(System.in);
 
@@ -151,7 +176,7 @@ public class MenuPlanta {
         if (exito) {
             System.out.println("Planta actualizada exitosamente.");
         } else {
-            System.out.println("Error al actualizar la planta. Verifique los datos ingresados.");
+            System.err.println("Error al actualizar la planta. Verifique los datos ingresados.");
         }
     }
 }

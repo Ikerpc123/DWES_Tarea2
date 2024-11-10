@@ -1,6 +1,5 @@
 package vista;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import servicios.CredencialServicio;
@@ -9,19 +8,46 @@ import servicios.MensajeServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
+/**
+ * Clase que representa el menú principal del administrador en la interfaz de usuario.
+ * 
+ * El {@code MenuAdmin} proporciona las opciones para gestionar diferentes entidades del sistema,
+ * tales como plantas, ejemplares, mensajes y personas. Permite al administrador interactuar con
+ * las funcionalidades del sistema mediante un menú interactivo en consola.
+ * 
+ * Los administradores pueden seleccionar opciones para gestionar las plantas, ejemplares, mensajes
+ * o registrar personas, y también tienen la opción de cerrar sesión.
+ * 
+ * Esta clase maneja la entrada del usuario mediante el uso de un objeto {@link Scanner} y valida
+ * que las opciones ingresadas sean correctas, mostrando mensajes de error en caso contrario.
+ */
 public class MenuAdmin {
-	
-	private PlantaServicio plantaServicio;
-	private PersonaServicio personaServicio;
-	private CredencialServicio credencialServicio;
-	private EjemplarServicio ejemplarServicio;
-	private MensajeServicio mensajeServicio;
-	private String usuario;
-	
-	public MenuAdmin() {}
+    
+    private PlantaServicio plantaServicio;
+    private PersonaServicio personaServicio;
+    private CredencialServicio credencialServicio;
+    private EjemplarServicio ejemplarServicio;
+    private MensajeServicio mensajeServicio;
+    private String usuario;
+    
+    /**
+     * Constructor por defecto.
+     */
+    public MenuAdmin() {}
 
+    /**
+     * Constructor que inicializa los servicios necesarios para la gestión de las entidades del sistema
+     * y establece el usuario del administrador.
+     * 
+     * @param plantaServicio El servicio para gestionar las plantas.
+     * @param personaServicio El servicio para gestionar las personas.
+     * @param credencialServicio El servicio para gestionar las credenciales.
+     * @param ejemplarServicio El servicio para gestionar los ejemplares.
+     * @param mensajeServicio El servicio para gestionar los mensajes.
+     * @param usuario El usuario que ha iniciado sesión.
+     */
     public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, 
-    		EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
+                     EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
         this.plantaServicio = plantaServicio;
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
@@ -29,8 +55,15 @@ public class MenuAdmin {
         this.mensajeServicio = mensajeServicio;
         this.usuario = usuario;
     }
-    
-	public void mostrarMenu() {
+
+    /**
+     * Método que muestra el menú principal para el administrador y gestiona la interacción con el usuario.
+     * El menú ofrece opciones para gestionar plantas, ejemplares, mensajes, registrar personas o cerrar sesión.
+     * 
+     * El método valida la entrada del usuario y asegura que se seleccione una opción válida entre las disponibles.
+     * También instancia y delega las acciones correspondientes a submenús específicos para cada tipo de gestión.
+     */
+    public void mostrarMenu() {
         Scanner scanner = new Scanner(System.in);
         int opcion = -1;
 
@@ -52,10 +85,10 @@ public class MenuAdmin {
                     if (opcion >= 1 && opcion <= 5) {
                         entradaValida = true;
                     } else {
-                        System.out.println("Error: Seleccione una opción válida entre 1 y 5.");
+                        System.err.println("Error: Seleccione una opción válida entre 1 y 5.");
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Ingrese un número válido.");
+                    System.err.println("Error: Ingrese un número válido.");
                 }
             }
 
@@ -84,15 +117,15 @@ public class MenuAdmin {
                     menuRegistro.mostrarMenuRegistro();
                     break;
                 case 5:
-                    System.out.println("Cerrando sesión...");
+                    System.err.println("Cerrando sesión...");
                     break;
                 default:
-                    System.out.println("Error: Opción no válida.");
+                    System.err.println("Error: Opción no válida.");
                     break;
             }
 
         } while (opcion != 5);
 
-        System.out.println("Sesión finalizada. Hasta luego.");
+        System.err.println("Sesión finalizada. Hasta luego.");
     }
 }

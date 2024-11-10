@@ -1,22 +1,36 @@
 package vista;
 
 import java.util.Scanner;
-
 import modelo.Credenciales;
 import modelo.Persona;
-import servicioImpl.PersonaServicioImpl;
 import servicios.CredencialServicio;
 import servicios.PersonaServicio;
 
+/**
+ * Clase que representa el menú de registro de una nueva persona y sus credenciales.
+ * Permite capturar los datos del usuario e insertarlos en el sistema.
+ */
 public class MenuRegistro {
-	 private final PersonaServicio personaServicio;
-	 private final CredencialServicio credencialServicio;
 
+    // Servicios para gestionar personas y credenciales
+    private final PersonaServicio personaServicio;
+    private final CredencialServicio credencialServicio;
+
+    /**
+     * Constructor de la clase MenuRegistro.
+     * 
+     * @param personaServicio Servicio para gestionar las personas.
+     * @param credencialServicio Servicio para gestionar las credenciales.
+     */
     public MenuRegistro(PersonaServicio personaServicio, CredencialServicio credencialServicio) {
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
     }
 
+    /**
+     * Método para mostrar el menú de registro y capturar los datos del nuevo usuario.
+     * Registra una nueva persona y sus credenciales en el sistema.
+     */
     public void mostrarMenuRegistro() {
         Scanner scanner = new Scanner(System.in);
 
@@ -39,18 +53,18 @@ public class MenuRegistro {
         Persona nuevaPersona = new Persona(nombre, email);
         Credenciales nuevasCredenciales = new Credenciales(nombreUsuario, password);
 
-        // Intento de registro
+        // Intento de registro de la persona
         if (personaServicio.registrarPersona(nuevaPersona)) {
             System.out.println("Registro exitoso. La persona ha sido añadida al sistema.");
         } else {
-            System.out.println("El registro ha fallado. Verifique los datos e intente nuevamente.");
-        }
-        if (credencialServicio.insertarCredenciales(nuevasCredenciales, email))
-        {
-            System.out.println("Registro exitoso. La persona ha sido añadida al sistema.");
-        } else {
-            System.out.println("El registro ha fallado. Verifique los datos e intente nuevamente.");
+            System.err.println("El registro ha fallado. Verifique los datos e intente nuevamente.");
         }
 
+        // Intento de registro de las credenciales
+        if (credencialServicio.insertarCredenciales(nuevasCredenciales, email)) {
+            System.out.println("Registro exitoso. Las credenciales han sido añadidas al sistema.");
+        } else {
+            System.err.println("El registro de credenciales ha fallado. Verifique los datos e intente nuevamente.");
+        }
     }
 }
