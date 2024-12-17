@@ -4,7 +4,9 @@ import java.util.Scanner;
 
 import servicios.CredencialServicio;
 import servicios.EjemplarServicio;
+import servicios.EnfermedadServicio;
 import servicios.MensajeServicio;
+import servicios.ParasitoServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -28,6 +30,8 @@ public class MenuAdmin {
     private CredencialServicio credencialServicio;
     private EjemplarServicio ejemplarServicio;
     private MensajeServicio mensajeServicio;
+    private EnfermedadServicio enfermedadServicio;
+    private ParasitoServicio parasitoServicio;
     private String usuario;
     
     /**
@@ -47,12 +51,14 @@ public class MenuAdmin {
      * @param usuario El usuario que ha iniciado sesión.
      */
     public MenuAdmin(PlantaServicio plantaServicio, PersonaServicio personaServicio, CredencialServicio credencialServicio, 
-                     EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, String usuario) {
+                     EjemplarServicio ejemplarServicio, MensajeServicio mensajeServicio, EnfermedadServicio enfermedadServicio, ParasitoServicio parasitoServicio, String usuario) {
         this.plantaServicio = plantaServicio;
         this.personaServicio = personaServicio;
         this.credencialServicio = credencialServicio;
         this.ejemplarServicio = ejemplarServicio;
         this.mensajeServicio = mensajeServicio;
+        this.enfermedadServicio = enfermedadServicio;
+        this.parasitoServicio = parasitoServicio;
         this.usuario = usuario;
     }
 
@@ -73,7 +79,8 @@ public class MenuAdmin {
             System.out.println("  2. Gestionar ejemplares");
             System.out.println("  3. Gestionar mensajes");
             System.out.println("  4. Registrar persona");
-            System.out.println("  5. Cerrar Sesión");
+            System.out.println("  5. Gestionar enfermedades");
+            System.out.println("  6. Cerrar Sesión");
             System.out.println("==================================");
 
             // Validación de entrada del usuario
@@ -97,6 +104,8 @@ public class MenuAdmin {
             MenuRegistro menuRegistro = new MenuRegistro(personaServicio, credencialServicio);
             MenuEjemplar menuEjemplar = new MenuEjemplar(plantaServicio, ejemplarServicio, mensajeServicio, credencialServicio, personaServicio, usuario);
             MenuMensaje menuMensajes = new MenuMensaje(mensajeServicio, personaServicio, plantaServicio, scanner);
+            MenuEnfermedad menuEnfermedad = new MenuEnfermedad(plantaServicio, enfermedadServicio, parasitoServicio);
+            
 
             // Manejo de las opciones
             switch (opcion) {
@@ -117,6 +126,9 @@ public class MenuAdmin {
                     menuRegistro.mostrarMenuRegistro();
                     break;
                 case 5:
+                    menuEnfermedad.mostrarMenu();
+                    break;
+                case 6:
                     System.err.println("Cerrando sesión...");
                     break;
                 default:

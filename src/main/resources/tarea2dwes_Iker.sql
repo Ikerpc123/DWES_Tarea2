@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-11-2024 a las 15:00:18
+-- Tiempo de generación: 17-12-2024 a las 14:22:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -41,7 +41,7 @@ CREATE TABLE `credenciales` (
 --
 
 INSERT INTO `credenciales` (`id`, `usuario`, `password`, `persona_id`) VALUES
-(0, 'admin', 'admin', 0);
+(1, 'admin', 'admin', 1);
 
 -- --------------------------------------------------------
 
@@ -53,6 +53,20 @@ CREATE TABLE `ejemplares` (
   `id` int(11) NOT NULL,
   `nombre` varchar(25) DEFAULT NULL,
   `idplanta` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `enfermedades`
+--
+
+CREATE TABLE `enfermedades` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(200) NOT NULL,
+  `sintomas` varchar(500) NOT NULL,
+  `nociva` tinyint(1) NOT NULL,
+  `cod_planta` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -72,6 +86,19 @@ CREATE TABLE `mensajes` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `parasitos`
+--
+
+CREATE TABLE `parasitos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(200) NOT NULL,
+  `color` varchar(100) NOT NULL,
+  `id_enfermedad` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `personas`
 --
 
@@ -86,7 +113,7 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`id`, `nombre`, `email`) VALUES
-(0, 'admin', 'admin');
+(1, 'admin', 'admin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -120,12 +147,27 @@ ALTER TABLE `ejemplares`
   ADD KEY `fk_planta` (`idplanta`);
 
 --
+-- Indices de la tabla `enfermedades`
+--
+ALTER TABLE `enfermedades`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_codplanta` (`cod_planta`);
+
+--
 -- Indices de la tabla `mensajes`
 --
 ALTER TABLE `mensajes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_menejemplar` (`ejemplar_id`),
   ADD KEY `fk_menpersona` (`persona_id`);
+
+--
+-- Indices de la tabla `parasitos`
+--
+ALTER TABLE `parasitos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQUE_nombre` (`nombre`),
+  ADD UNIQUE KEY `fk_idenfermedad` (`id_enfermedad`);
 
 --
 -- Indices de la tabla `personas`
@@ -148,25 +190,37 @@ ALTER TABLE `plantas`
 -- AUTO_INCREMENT de la tabla `credenciales`
 --
 ALTER TABLE `credenciales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `ejemplares`
 --
 ALTER TABLE `ejemplares`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `enfermedades`
+--
+ALTER TABLE `enfermedades`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `mensajes`
 --
 ALTER TABLE `mensajes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `parasitos`
+--
+ALTER TABLE `parasitos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

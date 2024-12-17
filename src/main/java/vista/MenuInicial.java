@@ -6,17 +6,23 @@ import java.util.Scanner;
 
 import daoImpl.CredencialesDAOImpl;
 import daoImpl.EjemplarDAOImpl;
+import daoImpl.EnfermedadDAOImpl;
 import daoImpl.MensajeDAOImpl;
+import daoImpl.ParasitoDAOImpl;
 import daoImpl.PersonaDAOImpl;
 import daoImpl.PlantaDAOImpl;
 import servicioImpl.CredencialServicioImpl;
 import servicioImpl.EjemplarServicioImpl;
+import servicioImpl.EnfermedadServicioImpl;
 import servicioImpl.MensajeServicioImpl;
+import servicioImpl.ParasitoServicioImpl;
 import servicioImpl.PersonaServicioImpl;
 import servicioImpl.PlantaServicioImpl;
 import servicios.CredencialServicio;
 import servicios.EjemplarServicio;
+import servicios.EnfermedadServicio;
 import servicios.MensajeServicio;
+import servicios.ParasitoServicio;
 import servicios.PersonaServicio;
 import servicios.PlantaServicio;
 
@@ -34,6 +40,8 @@ public class MenuInicial {
     private PersonaServicio personaServicio;
     private EjemplarServicio ejemplarServicio;
     private MensajeServicio mensajeServicio;
+    private EnfermedadServicio enfermedadServicio;
+    private ParasitoServicio parasitoServicio;
 
     /**
      * Constructor de la clase que inicializa los servicios para gestionar plantas, credenciales, 
@@ -47,12 +55,16 @@ public class MenuInicial {
         PersonaDAOImpl personaDAO = new PersonaDAOImpl(connection);
         EjemplarDAOImpl ejemplarDAO = new EjemplarDAOImpl(connection);
         MensajeDAOImpl mensajeDAO = new MensajeDAOImpl(connection);
+        EnfermedadDAOImpl enfermedadDAO = new EnfermedadDAOImpl(connection);
+        ParasitoDAOImpl parasitoDAO = new ParasitoDAOImpl(connection);
         
         this.plantaServicio = new PlantaServicioImpl(plantaDAO);
         this.credencialServicio = new CredencialServicioImpl(credenDAO, personaDAO);
         this.personaServicio = new PersonaServicioImpl(personaDAO);
         this.ejemplarServicio = new EjemplarServicioImpl(ejemplarDAO);
         this.mensajeServicio = new MensajeServicioImpl(mensajeDAO);
+        this.enfermedadServicio = new EnfermedadServicioImpl(enfermedadDAO);
+        this.parasitoServicio = new ParasitoServicioImpl(parasitoDAO);
     }
 
     /**
@@ -152,7 +164,7 @@ public class MenuInicial {
      */
     private void accederComoAdministrador(String usuario) {
         // Crear el menú de administrador y mostrarlo
-        MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio, ejemplarServicio, mensajeServicio, usuario);
+        MenuAdmin menuAdmin = new MenuAdmin(plantaServicio, personaServicio, credencialServicio, ejemplarServicio, mensajeServicio, enfermedadServicio, parasitoServicio, usuario);
         menuAdmin.mostrarMenu();
     }
 
